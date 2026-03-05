@@ -82,4 +82,30 @@ public class PlayerCOntroller : MonoBehaviour
         previousRotation = CurrentRotation;
 
     }
+
+    public void ActivatePowerUp(PowerUpSO powerUp)
+    {
+        if(powerUp.GetPowerUpType() == "speed")
+        {
+            baseSpeed += powerUp.GetValueChange();
+            boostSpeed += powerUp.GetValueChange();
+        }
+        else if(powerUp.GetPowerUpType() == "Torque")
+        {
+            torqueAmount += powerUp.GetValueChange();
+        }
+    }
+    
+    public void DeactivatePowerUp(PowerUpSO powerUp)
+    {
+        if(powerUp.GetPowerUpType() == "speed")
+        {
+            baseSpeed -= powerUp.GetValueChange();
+            boostSpeed -= powerUp.GetValueChange();
+        }
+        else if(powerUp.GetPowerUpType() == "Torque")
+        {
+            torqueAmount = powerUp.GetValueChange();
+        }
+    }
 }
