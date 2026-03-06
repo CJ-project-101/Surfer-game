@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ShortTorque
   m_EditorClassIdentifier: 
   powerUpType: Torque
-  valueChange: 10
+  valueChange: 7
   time: 3

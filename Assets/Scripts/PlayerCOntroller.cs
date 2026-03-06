@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,26 +7,26 @@ public class PlayerCOntroller : MonoBehaviour
     [SerializeField] float torqueAmount = 10f;
     [SerializeField] float baseSpeed = 15f;
     [SerializeField] float boostSpeed = 20f;
-    
+    [SerializeField] ParticleSystem powerUpParticle;
+
     Rigidbody2D myRigidbody2D;
     InputAction moveAction;
     SurfaceEffector2D surfaceEffector2D;
     Vector2 moveVector;
     ScoreManager scoreManager;
 
-
     bool canControlPlayer = true; 
     float previousRotation;
     float totalRotation;
     float flipCount;
+    int activePowerUpCount;
+    
     void Start()
     {
-
         moveAction = InputSystem.actions.FindAction("Move");
         myRigidbody2D = GetComponent<Rigidbody2D>();
         surfaceEffector2D = FindFirstObjectByType<SurfaceEffector2D>();
         scoreManager = FindFirstObjectByType<ScoreManager>();
-
     }
 
     void Update()
@@ -40,7 +41,6 @@ public class PlayerCOntroller : MonoBehaviour
 
     void RoatatePlayer()
     {
-        
         moveVector= moveAction.ReadValue<Vector2>();
         if(moveVector.x > 0)
         {
@@ -80,11 +80,13 @@ public class PlayerCOntroller : MonoBehaviour
             scoreManager.AddScore(1);
         } 
         previousRotation = CurrentRotation;
-
     }
 
     public void ActivatePowerUp(PowerUpSO powerUp)
     {
+        powerUpParticle.Play();
+        activePowerUpCount += 1;
+        
         if(powerUp.GetPowerUpType() == "speed")
         {
             baseSpeed += powerUp.GetValueChange();
@@ -98,6 +100,13 @@ public class PlayerCOntroller : MonoBehaviour
     
     public void DeactivatePowerUp(PowerUpSO powerUp)
     {
+        activePowerUpCount -= 1;
+        if(activePowerUpCount == 0)
+        {
+            powerUpParticle.Stop();  
+            print("no power");  
+        }
+
         if(powerUp.GetPowerUpType() == "speed")
         {
             baseSpeed -= powerUp.GetValueChange();
@@ -105,7 +114,7 @@ public class PlayerCOntroller : MonoBehaviour
         }
         else if(powerUp.GetPowerUpType() == "Torque")
         {
-            torqueAmount = powerUp.GetValueChange();
+            torqueAmount -= powerUp.GetValueChange();
         }
     }
 }
