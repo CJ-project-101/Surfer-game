@@ -4,7 +4,6 @@ public class ScoreManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scoreText; 
     int score = 0;
-
     
     public void AddScore(int additionalScore)
     {
